@@ -1,28 +1,22 @@
 
 
 
-function StatusBadge({status}) {
+function StatusBadge({ status }) {
 
-    let text =" ";
+    switch(status){
 
-    if(status === "ACTIVE"){
-        text = "🟢 OPEN";
+        case "OPEN":
+            return <span>🟢 Open</span>;
+
+        case "FULL":
+            return <span>🔴 Full</span>;
+
+        case "CANCELLED":
+            return <span>⚫ Cancelled</span>;
+
+        default:
+            return <span>Unknown</span>;
     }
-
-    else if (status === "FULL"){
-        text = "🔴 Full";
-    }
-
-    else if (status ==="CANCELLED"){
-        text = "⚫ Cancelled"
-    }
-
-    return(
-
-        <span>
-            {text}
-        </span>
-    );
 
 }
 

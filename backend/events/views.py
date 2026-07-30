@@ -37,6 +37,8 @@ class RegistrationCreateAPIView(APIView):
 
     def post(self, request):
 
+
+        print(request.data)
         event_id = request.data.get("event")
 
         event = get_object_or_404(
@@ -44,8 +46,26 @@ class RegistrationCreateAPIView(APIView):
             id=event_id
         )
 
+        if event.status == "CANCELLED":
 
+            return Response(
+                {"error":"This event has been cancelled."},
+                status=400
+            )
+
+
+        if event.status == "FULL":
+
+            return Response(
+                {"error":"This event is already full."},
+                status=400
+            )
+
+
+        
         if event.registrations.count() >= event.capacity:
+
+            event.registered_count += 1
 
             return Response(
                 {
@@ -64,9 +84,11 @@ class RegistrationCreateAPIView(APIView):
 
             serializer.save()
 
-        if event.registrations.count() >= event.capacity:
-            event.status = "FULL"
-            event.save()
+
+            if event.registrations.count() >= event.capacity:
+
+                event.status = "FULL"
+                event.save()
 
 
             return Response(

@@ -1,31 +1,78 @@
-import {useState} from "react";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 import API from "../api";
+// import { useNavigate } from "react-router-dom";
 
 
 function Register(){
 
-    const [form,setForm]=useState({
+    // const navigate = useNavigate();
+    const { id } = useParams();
+
+    const [form,setForm] = useState({
         name:"",
         email:"",
         university:""
     });
 
 
+    const [loading,setLoading] = useState(false);
+
+
+    const handleChange = (e)=>{
+
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value
+        });
+
+    };
+
+
     const submit = async(e)=>{
 
         e.preventDefault();
 
+        try{
 
-        await API.post(
-            "register/",
-            {
-                ...form,
-                event:1
-            }
-        );
+            setLoading(true);
 
 
-        alert("Registered!");
+            await API.post(
+                "register/",
+                {
+                    ...form,
+                    event:id
+                }
+            );
+
+
+            // navigate(`/events/${id}`)
+
+            alert("Registered successfully!");
+            
+
+            setForm({
+                name:"",
+                email:"",
+                university:""
+            });
+                 
+
+        }catch(error){
+
+            console.error(error);
+            console.log(error.response?.data);
+
+            alert(
+                "Registration failed. Please try again.",
+            );
+
+        }finally{
+
+            setLoading(false);
+
+        }
 
     };
 
@@ -34,47 +81,51 @@ function Register(){
 
         <form onSubmit={submit}>
 
+
             <input
-            placeholder="Name"
-            onChange={
-                e=>setForm({
-                    ...form,
-                    name:e.target.value
-                })
-            }
+                name="name"
+                value={form.name}
+                placeholder="Name"
+                onChange={handleChange}
+                required
             />
 
 
             <input
-            placeholder="Email"
-            onChange={
-                e=>setForm({
-                    ...form,
-                    email:e.target.value
-                })
-            }
+                name="email"
+                value={form.email}
+                placeholder="Email"
+                type="email"
+                onChange={handleChange}
+                required
             />
 
 
             <input
-            placeholder="University"
-            onChange={
-                e=>setForm({
-                    ...form,
-                    university:e.target.value
-                })
-            }
+                name="university"
+                value={form.university}
+                placeholder="University"
+                onChange={handleChange}
+                required
             />
 
 
-            <button>
-                Register
+            <button disabled={loading}>
+
+                {
+                    loading 
+                    ? "Registering..."
+                    : "Register"
+                }
+
             </button>
+
 
         </form>
 
     )
 
 }
+
 
 export default Register;

@@ -1,57 +1,51 @@
 import {useEffect, useState} from "react";
-import {Link} from "react-router-dom";
 import API from "../api";
-import EventCard from "../components/EventCard";
-import {groupEventsByMonth} from "../utils/groupEventsByMouth";
+import CalendarView from "../components/CalendarView";
 
 
 function Home(){
 
     const [events, setEvents] = useState([]);
-    const groupedEvents = groupEventsByMonth(events);
 
 
     useEffect(()=>{
 
         API.get("events/")
-            .then((response)=>{
-                setEvents(response.data);
-            })
-            .catch((error)=>{
-                console.log(error);
-            })  
+        .then((response)=>{
 
-        },[]);
+            setEvents(response.data);
 
-        return(
+        })
+        .catch((error)=>{
 
-            Object.entries(groupedEvents).map(([month, monthEvents])=> (
-                    
-            <div key={month}>
+            console.log(error);
 
-                <h2>{month}</h2>
+        });
 
-                <hr />
 
-                
-            {
-                monthEvents.map(event =>(
-                    <EventCard
-                        key = {event.id}
-                        event = {event}
-                    
-                    />
-            ))
-        }
+    },[]);
+
+
+
+    return (
+
+        <div>
+
+            <h1>
+                Talentbank Career Fair Calendar
+            </h1>
+
+
+            <CalendarView
+                events={events}
+            />
+
 
         </div>
-    ))
-)}
+
+    );
+
+}
+
 
 export default Home;
-
-
-
-
-
-

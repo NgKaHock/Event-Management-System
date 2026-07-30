@@ -42,10 +42,23 @@ function EventDetail(){
             </p>
             <p>{event.description}</p>
 
+            {
+                event.status === "ACTIVE" ? (
+
             <Link to={`/events/${event.id}/register`}>
                 <button>Register Now!!</button>
             </Link>
 
+            ) : (
+
+                <button disabled>
+
+                    {event.status}
+
+                </button>
+
+            )
+}
         </div>
 
     );

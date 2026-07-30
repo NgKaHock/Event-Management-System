@@ -17,7 +17,7 @@ urlpatterns =[
 
     path(
     "register/",
-    RegistrationCreateAPIView.as_view()
+    RegistrationCreateAPIView.as_view()          
 ),
     
 ] 

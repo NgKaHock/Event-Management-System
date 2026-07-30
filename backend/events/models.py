@@ -1,9 +1,10 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 # Create your models here.
-class Event (models.Model):
+class Event(models.Model):
 
-    STATUS_CHOICES =[
+    STATUS_CHOICES = [
         ('ACTIVE','Active'),
         ('CANCELLED','Cancelled'),
         ('FULL','Full'),
@@ -12,7 +13,7 @@ class Event (models.Model):
     title = models.CharField(max_length=200)
 
     description = models.TextField(
-        blank = True
+        blank=True
     )
 
     date = models.DateField()
@@ -26,25 +27,53 @@ class Event (models.Model):
     )
 
     capacity = models.IntegerField(
-        default = 0
+        default=0
     )
 
     status = models.CharField(
-        max_length = 20,
-        choices = STATUS_CHOICES,
-        default = 'ACTIVE' 
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='ACTIVE'
     )
 
     created_at = models.DateTimeField(
-        auto_now_add = True
+        auto_now_add=True
     )
 
     updated_at = models.DateTimeField(
         auto_now=True
     )
 
+
     def __str__(self):
         return self.title
+
+
+    def clean(self):
+
+        clash = Event.objects.filter(
+
+            date=self.date,
+
+            location=self.location
+
+        ).exclude(
+            pk=self.pk
+        )
+
+
+        if clash.exists():
+
+            raise ValidationError(
+                "Another event already exists at this location on this date."
+            )
+
+
+    def save(self, *args, **kwargs):
+
+        self.full_clean()
+
+        super().save(*args, **kwargs)
 
 
 class Registration(models.Model):
@@ -72,3 +101,4 @@ class Registration(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.event.title}"
+
