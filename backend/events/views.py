@@ -45,7 +45,7 @@ class RegistrationCreateAPIView(APIView):
         )
 
 
-        if event.registered_count >= event.capacity:
+        if event.registrations.count() >= event.capacity:
 
             return Response(
                 {
@@ -64,7 +64,8 @@ class RegistrationCreateAPIView(APIView):
 
             serializer.save()
 
-            event.registered_count += 1
+        if event.registrations.count() >= event.capacity:
+            event.status = "FULL"
             event.save()
 
 

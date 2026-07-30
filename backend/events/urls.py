@@ -20,4 +20,4 @@ urlpatterns =[
     RegistrationCreateAPIView.as_view()
 ),
     
-]
+] 

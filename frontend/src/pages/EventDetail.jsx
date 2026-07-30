@@ -1,12 +1,12 @@
-import { useEffect, usestate } from "react";
+import { useEffect, useState } from "react";
 import {useParams} from "react-router-dom";
 import API from "../api";
+import { Link } from "react-router-dom";
 
 function EventDetail(){
 
     const {id} = useParams();
-
-    const [event, setEvent] = useState(null);
+    const [event, setEvent] = useState();
 
     useEffect(()=>{
         API.get(`events/${id}/`)
@@ -42,7 +42,9 @@ function EventDetail(){
             </p>
             <p>{event.description}</p>
 
-            <button>Register Now!!</button>
+            <Link to={`/events/${event.id}/register`}>
+                <button>Register Now!!</button>
+            </Link>
 
         </div>
 
