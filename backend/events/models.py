@@ -45,3 +45,30 @@ class Event (models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Registration(models.Model):
+
+    event = models.ForeignKey(
+        Event,
+        on_delete=models.CASCADE,
+        related_name="registrations"
+    )
+
+    name = models.CharField(
+        max_length=100
+    )
+
+    email = models.EmailField()
+
+    university = models.CharField(
+        max_length=200
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+
+    def __str__(self):
+        return f"{self.name} - {self.event.title}"

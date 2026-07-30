@@ -1,10 +1,15 @@
 import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import API from "../api";
+import EventCard from "../components/EventCard";
+import {groupEventsByMonth} from "../utils/groupEventsByMouth";
+
 
 function Home(){
 
     const [events, setEvents] = useState([]);
+    const groupedEvents = groupEventsByMonth(events);
+
 
     useEffect(()=>{
 
@@ -14,37 +19,34 @@ function Home(){
             })
             .catch((error)=>{
                 console.log(error);
-            })
+            })  
 
         },[]);
 
         return(
-            <div>
-                <h1>
-                    Talentbank Career Fair Calendar 
-                </h1>
-            {
-                events.map((event) => (
 
-            <div key={event.id}>
+            Object.entries(groupedEvents).map(([month, monthEvents])=> (
+                    
+            <div key={month}>
 
-                <h2>{event.title}</h2>
-                <p>Date: {event.date}</p>
-                <p>Location: {event.location}</p>
-
-                <Link to={`/events/${event.id}`} >
-                    View Details
-                </Link>
+                <h2>{month}</h2>
 
                 <hr />
+
                 
-            </div>
+            {
+                monthEvents.map(event =>(
+                    <EventCard
+                        key = {event.id}
+                        event = {event}
+                    
+                    />
             ))
         }
 
         </div>
-    );
-}
+    ))
+)}
 
 export default Home;
 
