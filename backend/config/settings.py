@@ -56,7 +56,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "https://event13.netlify.app/"
+    "https://event13.netlify.app"
 ]
 
 ROOT_URLCONF = 'config.urls'
